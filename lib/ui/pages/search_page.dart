@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:restaurant_app/common/assets.dart';
-import 'package:restaurant_app/common/debouncer.dart';
-import 'package:restaurant_app/common/strings.dart';
-import 'package:restaurant_app/common/styles.dart';
-import 'package:restaurant_app/model/restaurant_model.dart';
+import 'package:restaurant_app/common/res/assets.dart';
+import 'package:restaurant_app/common/res/strings.dart';
+import 'package:restaurant_app/common/res/styles.dart';
+import 'package:restaurant_app/common/utils/debouncer.dart';
+import 'package:restaurant_app/data/model/list_restaurant_response.dart';
 import 'package:restaurant_app/ui/widgets/item_restaurant.dart';
 
 class SearchPage extends StatefulWidget {
@@ -30,7 +30,7 @@ class _SearchPageState extends State<SearchPage> {
         Assets.localRestaurantJson,
       );
       setState(() {
-        listRestaurant = restaurantModelFromJson(loadRestaurants).restaurants;
+        // listRestaurant = restaurantModelFromJson(loadRestaurants).restaurants;
         listRestaurantSearch = listRestaurant;
       });
     });

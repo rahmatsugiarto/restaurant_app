@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:restaurant_app/common/assets.dart';
-import 'package:restaurant_app/common/strings.dart';
+import 'package:restaurant_app/common/res/assets.dart';
+import 'package:restaurant_app/common/res/strings.dart';
 
 import 'home_page.dart';
 
