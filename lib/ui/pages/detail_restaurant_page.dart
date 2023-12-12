@@ -2,11 +2,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:getwidget/colors/gf_color.dart';
 import 'package:getwidget/components/rating/gf_rating.dart';
 import 'package:restaurant_app/common/constant/app_constant.dart';
 import 'package:restaurant_app/common/res/assets.dart';
 import 'package:restaurant_app/common/res/strings.dart';
+import 'package:restaurant_app/common/res/styles.dart';
 import 'package:restaurant_app/common/utils/extention.dart';
 import 'package:restaurant_app/common/utils/random_pict.dart';
 import 'package:restaurant_app/common/utils/view_data_state.dart';
@@ -14,6 +16,7 @@ import 'package:restaurant_app/data/model/detail_restaurant_response.dart';
 import 'package:restaurant_app/data/model/list_restaurant_response.dart';
 import 'package:restaurant_app/ui/blocs/detail_restaurant_bloc/detail_restaurant_cubit.dart';
 import 'package:restaurant_app/ui/blocs/detail_restaurant_bloc/detail_restaurant_state.dart';
+import 'package:restaurant_app/ui/widgets/bottom_sheet_add_review.dart';
 import 'package:restaurant_app/ui/widgets/detail_restaurant_loading.dart';
 import 'package:restaurant_app/ui/widgets/skeleton.dart';
 
@@ -29,12 +32,12 @@ class DetailRestaurantPage extends StatefulWidget {
 }
 
 class _DetailRestaurantPageState extends State<DetailRestaurantPage> {
+  final TextEditingController _controllerAddReview = TextEditingController();
+
   @override
   void initState() {
     super.initState();
-    context
-        .read<DetailRestaurantCubit>()
-        .getDetailRestaurant(id: widget.restaurant.id);
+    _getDetailRestaurant();
 
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
@@ -46,8 +49,45 @@ class _DetailRestaurantPageState extends State<DetailRestaurantPage> {
   }
 
   @override
+  void dispose() {
+    _controllerAddReview.dispose();
+    super.dispose();
+  }
+
+  void _getDetailRestaurant() {
+    context
+        .read<DetailRestaurantCubit>()
+        .getDetailRestaurant(id: widget.restaurant.id);
+  }
+
+  void _addReview({required String review}) {
+    context.read<DetailRestaurantCubit>().addReview(
+          idRestaurant: widget.restaurant.id,
+          review: review,
+        );
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: primaryColor,
+        child: const Icon(
+          Icons.comment,
+          color: secondaryColor,
+        ),
+        onPressed: () {
+          BottomSheetAddReview.show(
+            context: context,
+            textController: _controllerAddReview,
+            onSendReview: () {
+              _addReview(review: _controllerAddReview.text.trim());
+            },
+            onClose: () => _getDetailRestaurant(),
+          );
+        },
+      ),
       body: Stack(
         children: [
           SingleChildScrollView(
@@ -161,6 +201,9 @@ class _DetailRestaurantPageState extends State<DetailRestaurantPage> {
                               ],
                             ),
                           ),
+                          const SizedBox(
+                            width: 10.0,
+                          ),
                           Container(
                             margin: const EdgeInsets.only(right: 16),
                             child: Row(
@@ -196,7 +239,41 @@ class _DetailRestaurantPageState extends State<DetailRestaurantPage> {
                         ),
                       ),
                       const SizedBox(height: 24),
-                      BlocBuilder<DetailRestaurantCubit, DetailRestaurantState>(
+                      BlocConsumer<DetailRestaurantCubit,
+                          DetailRestaurantState>(
+                        listener: (context, state) {
+                          final statusAddReview = state.addReviewState.status;
+                          final statusDetail = state.detailState.status;
+
+                          if (statusDetail.isError) {
+                            var snackBar = SnackBar(
+                              content: Text(state.detailState.message),
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                            EasyLoading.dismiss();
+                          }
+
+                          if (statusAddReview.isLoading) {
+                            EasyLoading.show(
+                              status: Strings.loading,
+                              maskType: EasyLoadingMaskType.black,
+                            );
+                          }
+
+                          if (statusAddReview.isError) {
+                            var snackBar = SnackBar(
+                              content: Text(state.addReviewState.message),
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                            EasyLoading.dismiss();
+                          }
+
+                          if (statusAddReview.isHasData) {
+                            EasyLoading.dismiss();
+                          }
+                        },
                         builder: (context, state) {
                           final status = state.detailState.status;
                           if (status.isLoading) {
@@ -310,7 +387,7 @@ class _DetailRestaurantPageState extends State<DetailRestaurantPage> {
     );
   }
 
-  Row _buildCategory(BuildContext context, String? category) {
+  Widget _buildCategory(BuildContext context, String? category) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

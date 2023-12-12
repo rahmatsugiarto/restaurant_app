@@ -17,12 +17,16 @@ class DetailRestaurantCubit extends Cubit<DetailRestaurantState> {
             detailState: ViewData.initial(),
             isFav: false,
             category: "",
+            addReviewState: ViewData.initial(),
           ),
         );
 
   void getDetailRestaurant({required String id}) async {
     try {
-      emit(state.copyWith(detailState: ViewData.loading()));
+      emit(state.copyWith(
+        addReviewState: ViewData.initial(),
+        detailState: ViewData.loading(),
+      ));
 
       final result = await apiService.getDetailRestaurant(id: id);
 
@@ -50,5 +54,42 @@ class DetailRestaurantCubit extends Cubit<DetailRestaurantState> {
 
   void setIsFav() {
     emit(state.copyWith(isFav: !state.isFav));
+  }
+
+  void addReview({
+    required String idRestaurant,
+    required String review,
+  }) async {
+    try {
+      emit(state.copyWith(
+        detailState: ViewData.initial(),
+        addReviewState: ViewData.loading(),
+      ));
+
+      final result = await apiService.addReview(
+        idRestaurant: idRestaurant,
+        review: review,
+      );
+
+      emit(state.copyWith(addReviewState: ViewData.loaded(data: result)));
+    } on SocketException catch (e) {
+      debugPrint(e.toString());
+      emit(
+        state.copyWith(
+          detailState: ViewData.error(
+            message: Strings.errorNetwork,
+          ),
+        ),
+      );
+    } catch (e) {
+      debugPrint("e.toString() : ${e.toString()}");
+      emit(
+        state.copyWith(
+          detailState: ViewData.error(
+            message: Strings.somethingSeemsWrong,
+          ),
+        ),
+      );
+    }
   }
 }

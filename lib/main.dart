@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:restaurant_app/common/res/strings.dart';
 import 'package:restaurant_app/common/res/styles.dart';
 import 'package:restaurant_app/data/api/api_service.dart';
 import 'package:restaurant_app/ui/blocs/detail_restaurant_bloc/detail_restaurant_cubit.dart';
 import 'package:restaurant_app/ui/blocs/home_bloc/home_cubit.dart';
+import 'package:restaurant_app/ui/blocs/search_bloc/search_cubit.dart';
 import 'package:restaurant_app/ui/pages/detail_restaurant_page.dart';
 import 'package:restaurant_app/ui/pages/home_page.dart';
 import 'package:restaurant_app/ui/pages/search_page.dart';
@@ -44,6 +46,7 @@ class MyApp extends StatelessWidget {
               secondary: secondaryColor,
             ),
       ),
+      builder: EasyLoading.init(),
       home: const SplashPage(),
       routes: {
         HomePage.routeName: (context) => BlocProvider(
@@ -52,7 +55,10 @@ class MyApp extends StatelessWidget {
               ),
               child: const HomePage(),
             ),
-        SearchPage.routeName: (context) => const SearchPage(),
+        SearchPage.routeName: (context) => BlocProvider(
+              create: (context) => SearchCubit(apiService: ApiService()),
+              child: const SearchPage(),
+            ),
         DetailRestaurantPage.routeName: (context) => BlocProvider(
               create: (context) =>
                   DetailRestaurantCubit(apiService: ApiService()),
