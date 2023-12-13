@@ -7,6 +7,7 @@ class DetailRestaurantState {
   final String category;
   final ViewData<bool> addReviewState;
   final List<String> listRandomPict;
+  final ViewData saveFavoriteState;
 
   const DetailRestaurantState({
     required this.detailState,
@@ -14,6 +15,7 @@ class DetailRestaurantState {
     required this.category,
     required this.addReviewState,
     required this.listRandomPict,
+    required this.saveFavoriteState,
   });
 
   DetailRestaurantState copyWith({
@@ -22,6 +24,7 @@ class DetailRestaurantState {
     String? category,
     ViewData<bool>? addReviewState,
     List<String>? listRandomPict,
+    ViewData? saveFavoriteState,
   }) {
     return DetailRestaurantState(
       detailState: detailState ?? this.detailState,
@@ -29,6 +32,7 @@ class DetailRestaurantState {
       category: category ?? this.category,
       addReviewState: addReviewState ?? this.addReviewState,
       listRandomPict: listRandomPict ?? this.listRandomPict,
+      saveFavoriteState: saveFavoriteState ?? this.saveFavoriteState,
     );
   }
 }

@@ -37,6 +37,9 @@ class _DetailRestaurantPageState extends State<DetailRestaurantPage> {
   @override
   void initState() {
     super.initState();
+    // Future.microtask(() {
+    isBookmarked();
+
     _getDetailRestaurant();
 
     SystemChrome.setSystemUIOverlayStyle(
@@ -46,6 +49,7 @@ class _DetailRestaurantPageState extends State<DetailRestaurantPage> {
         statusBarBrightness: Brightness.light,
       ),
     );
+    // });
   }
 
   @override
@@ -65,6 +69,10 @@ class _DetailRestaurantPageState extends State<DetailRestaurantPage> {
           idRestaurant: widget.restaurant.id,
           review: review,
         );
+  }
+
+  void isBookmarked() {
+    context.read<DetailRestaurantCubit>().checkFavorited(widget.restaurant.id);
   }
 
   @override
@@ -562,7 +570,9 @@ class _DetailRestaurantPageState extends State<DetailRestaurantPage> {
                           color: Colors.red,
                         ),
                   onPressed: () {
-                    context.read<DetailRestaurantCubit>().setIsFav();
+                    context
+                        .read<DetailRestaurantCubit>()
+                        .saveFavorite(widget.restaurant);
                   },
                 ),
               );

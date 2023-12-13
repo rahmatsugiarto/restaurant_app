@@ -6,6 +6,7 @@ import 'package:restaurant_app/common/utils/view_data_state.dart';
 import 'package:restaurant_app/data/model/list_restaurant_response.dart';
 import 'package:restaurant_app/ui/blocs/home_bloc/home_cubit.dart';
 import 'package:restaurant_app/ui/blocs/home_bloc/home_state.dart';
+import 'package:restaurant_app/ui/pages/detail_restaurant_page.dart';
 import 'package:restaurant_app/ui/widgets/custom_refresh_indicator.dart';
 import 'package:restaurant_app/ui/widgets/home_loading.dart';
 import 'package:restaurant_app/ui/widgets/item_restaurant.dart';
@@ -13,8 +14,6 @@ import 'package:restaurant_app/ui/widgets/item_restaurant.dart';
 import 'search_page.dart';
 
 class HomePage extends StatefulWidget {
-  static const routeName = '/home_page';
-
   const HomePage({Key? key}) : super(key: key);
 
   @override
@@ -143,6 +142,12 @@ class _HomePageState extends State<HomePage> {
                             itemBuilder: (context, index) {
                               return ItemRestaurant(
                                 restaurant: restaurants[index],
+                                onTap: () {
+                                  Navigator.of(context).pushNamed(
+                                    DetailRestaurantPage.routeName,
+                                    arguments: restaurants[index],
+                                  );
+                                },
                               );
                             },
                           );

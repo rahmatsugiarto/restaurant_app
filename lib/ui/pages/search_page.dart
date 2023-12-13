@@ -6,6 +6,7 @@ import 'package:restaurant_app/common/utils/debouncer.dart';
 import 'package:restaurant_app/common/utils/view_data_state.dart';
 import 'package:restaurant_app/ui/blocs/search_bloc/search_cubit.dart';
 import 'package:restaurant_app/ui/blocs/search_bloc/search_state.dart';
+import 'package:restaurant_app/ui/pages/detail_restaurant_page.dart';
 import 'package:restaurant_app/ui/widgets/home_loading.dart';
 import 'package:restaurant_app/ui/widgets/item_restaurant.dart';
 
@@ -145,8 +146,14 @@ class _SearchPageState extends State<SearchPage> {
                 vertical: 10,
               ),
               itemBuilder: (context, index) {
-                return ItemRestaurant(
+              return ItemRestaurant(
                   restaurant: resultSearch[index],
+                  onTap: () {
+                    Navigator.of(context).pushNamed(
+                      DetailRestaurantPage.routeName,
+                      arguments: resultSearch[index],
+                    );
+                  },
                 );
               },
             );

@@ -6,13 +6,16 @@ import 'package:restaurant_app/common/res/strings.dart';
 import 'package:restaurant_app/common/utils/random_pict.dart';
 import 'package:restaurant_app/common/utils/view_data_state.dart';
 import 'package:restaurant_app/data/api/api_service.dart';
+import 'package:restaurant_app/data/db/database_helper.dart';
+import 'package:restaurant_app/data/model/list_restaurant_response.dart';
 
 import 'detail_restaurant_state.dart';
 
 class DetailRestaurantCubit extends Cubit<DetailRestaurantState> {
   final ApiService apiService;
+  final DatabaseHelper db;
 
-  DetailRestaurantCubit({required this.apiService})
+  DetailRestaurantCubit({required this.apiService, required this.db})
       : super(
           DetailRestaurantState(
             detailState: ViewData.initial(),
@@ -20,6 +23,7 @@ class DetailRestaurantCubit extends Cubit<DetailRestaurantState> {
             category: "",
             addReviewState: ViewData.initial(),
             listRandomPict: [],
+            saveFavoriteState: ViewData.initial(),
           ),
         );
 
@@ -54,24 +58,6 @@ class DetailRestaurantCubit extends Cubit<DetailRestaurantState> {
           ),
         ),
       );
-    }
-  }
-
-  void setIsFav() {
-    if (state.detailState.status.isError) {
-      emit(state.copyWith(
-        isFav: !state.isFav,
-        detailState: ViewData.initial(),
-      ));
-    } else if (state.addReviewState.status.isError) {
-      emit(state.copyWith(
-        isFav: !state.isFav,
-        addReviewState: ViewData.initial(),
-      ));
-    } else {
-      emit(state.copyWith(
-        isFav: !state.isFav,
-      ));
     }
   }
 
@@ -121,5 +107,46 @@ class DetailRestaurantCubit extends Cubit<DetailRestaurantState> {
     }
 
     emit(state.copyWith(listRandomPict: listRandomPict));
+  }
+
+  void saveFavorite(Restaurant restaurant) async {
+    try {
+      emit(state.copyWith(saveFavoriteState: ViewData.initial()));
+
+      final bookmarkedArticle = await db.getFavoriteById(restaurant.id);
+      final isFav = bookmarkedArticle.isNotEmpty;
+
+      if (isFav) {
+        await db.removeFavorite(restaurant.id);
+      } else {
+        await db.insertFavorite(restaurant);
+      }
+
+      checkFavorited(restaurant.id);
+    } catch (e) {
+      emit(state.copyWith(
+          saveFavoriteState: ViewData.error(
+        message: Strings.somethingSeemsWrong,
+      )));
+    }
+  }
+
+  Future<void> checkFavorited(String id) async {
+    final bookmarkedArticle = await db.getFavoriteById(id);
+    final isFav = bookmarkedArticle.isNotEmpty;
+
+    if (state.detailState.status.isError) {
+      emit(state.copyWith(
+        isFav: isFav,
+        detailState: ViewData.initial(),
+      ));
+    } else if (state.addReviewState.status.isError) {
+      emit(state.copyWith(
+        isFav: isFav,
+        addReviewState: ViewData.initial(),
+      ));
+    } else {
+      emit(state.copyWith(isFav: isFav));
+    }
   }
 }
