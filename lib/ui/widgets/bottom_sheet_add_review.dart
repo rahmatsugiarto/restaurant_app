@@ -6,10 +6,8 @@ class BottomSheetAddReview {
     required BuildContext context,
     required TextEditingController textController,
     required Function onSendReview,
-    required Function onClose,
   }) async {
     bool isTextFormFieldNotEmpty = true;
-    bool isSent = false;
 
     showModalBottomSheet(
       context: context,
@@ -113,7 +111,6 @@ class BottomSheetAddReview {
                           if (!isTextFormFieldNotEmpty) {
                             Navigator.pop(context);
                             onSendReview();
-                            isSent = true;
                           }
                         },
                         child: Container(
@@ -147,9 +144,6 @@ class BottomSheetAddReview {
         );
       },
     ).then((_) {
-      if (isSent) {
-        onClose();
-      }
       textController.clear();
     });
   }

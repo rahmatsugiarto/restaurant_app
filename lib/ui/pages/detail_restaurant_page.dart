@@ -10,13 +10,13 @@ import 'package:restaurant_app/common/res/assets.dart';
 import 'package:restaurant_app/common/res/strings.dart';
 import 'package:restaurant_app/common/res/styles.dart';
 import 'package:restaurant_app/common/utils/extention.dart';
-import 'package:restaurant_app/common/utils/random_pict.dart';
 import 'package:restaurant_app/common/utils/view_data_state.dart';
 import 'package:restaurant_app/data/model/detail_restaurant_response.dart';
 import 'package:restaurant_app/data/model/list_restaurant_response.dart';
 import 'package:restaurant_app/ui/blocs/detail_restaurant_bloc/detail_restaurant_cubit.dart';
 import 'package:restaurant_app/ui/blocs/detail_restaurant_bloc/detail_restaurant_state.dart';
 import 'package:restaurant_app/ui/widgets/bottom_sheet_add_review.dart';
+import 'package:restaurant_app/ui/widgets/custom_refresh_indicator.dart';
 import 'package:restaurant_app/ui/widgets/detail_restaurant_loading.dart';
 import 'package:restaurant_app/ui/widgets/skeleton.dart';
 
@@ -84,230 +84,236 @@ class _DetailRestaurantPageState extends State<DetailRestaurantPage> {
             onSendReview: () {
               _addReview(review: _controllerAddReview.text.trim());
             },
-            onClose: () => _getDetailRestaurant(),
           );
         },
       ),
       body: Stack(
         children: [
-          SingleChildScrollView(
-            child: Column(
-              children: [
-                Hero(
-                  tag: widget.restaurant.pictureId,
-                  child: CachedNetworkImage(
-                    imageUrl:
-                        AppConstant.imageUrl + widget.restaurant.pictureId,
-                    imageBuilder: (_, imageProvider) {
-                      return Container(
-                        height: 400,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: imageProvider,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      );
-                    },
-                    placeholder: (context, url) {
-                      return Container(
-                        height: 400,
-                        decoration: BoxDecoration(
-                          color: Colors.grey[50],
-                        ),
-                      );
-                    },
-                    errorWidget: (context, url, error) {
-                      return Container(
-                        height: 400,
-                        decoration: BoxDecoration(
-                          color: Colors.grey[50],
-                        ),
-                        child: const Center(
-                          child: Icon(
-                            Icons.error,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Container(
-                  padding: const EdgeInsets.fromLTRB(
-                    16,
-                    8,
-                    0,
-                    0,
-                  ),
-                  child: Column(
-                    children: [
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          widget.restaurant.name,
-                          style: Theme.of(context).textTheme.headlineMedium,
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.only(top: 2),
-                                  child: Icon(
-                                    Icons.location_on_outlined,
-                                    color: Colors.grey,
-                                    size: 15,
-                                  ),
-                                ),
-                                Expanded(
-                                  child: BlocBuilder<DetailRestaurantCubit,
-                                      DetailRestaurantState>(
-                                    builder: (context, state) {
-                                      final status = state.detailState.status;
-
-                                      if (status.isLoading) {
-                                        return const Skeleton(
-                                          height: 14,
-                                          width: 100,
-                                        );
-                                      } else if (status.isHasData) {
-                                        final address = state.detailState.data
-                                            ?.restaurant.address;
-                                        return Text(
-                                          "$address, ${widget.restaurant.city}",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyMedium,
-                                        );
-                                      } else {
-                                        return Text(
-                                          widget.restaurant.city,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyMedium,
-                                        );
-                                      }
-                                    },
-                                  ),
-                                ),
-                              ],
+          CustomRefreshIndicator(
+            onRefresh: () async {
+              _getDetailRestaurant();
+            },
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Column(
+                children: [
+                  Hero(
+                    tag: widget.restaurant.pictureId,
+                    child: CachedNetworkImage(
+                      imageUrl:
+                          AppConstant.imageUrl + widget.restaurant.pictureId,
+                      imageBuilder: (_, imageProvider) {
+                        return Container(
+                          height: 400,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: imageProvider,
+                              fit: BoxFit.cover,
                             ),
                           ),
-                          const SizedBox(
-                            width: 10.0,
+                        );
+                      },
+                      placeholder: (context, url) {
+                        return Container(
+                          height: 400,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[50],
                           ),
-                          Container(
-                            margin: const EdgeInsets.only(right: 16),
-                            child: Row(
-                              children: [
-                                GFRating(
-                                  color: GFColors.WARNING,
-                                  borderColor: GFColors.WARNING,
-                                  filledIcon: const Icon(
-                                    Icons.star,
+                        );
+                      },
+                      errorWidget: (context, url, error) {
+                        return Container(
+                          height: 400,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[50],
+                          ),
+                          child: const Center(
+                            child: Icon(
+                              Icons.error,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(
+                      16,
+                      8,
+                      0,
+                      0,
+                    ),
+                    child: Column(
+                      children: [
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            widget.restaurant.name,
+                            style: Theme.of(context).textTheme.headlineMedium,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Padding(
+                                    padding: EdgeInsets.only(top: 2),
+                                    child: Icon(
+                                      Icons.location_on_outlined,
+                                      color: Colors.grey,
+                                      size: 15,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: BlocBuilder<DetailRestaurantCubit,
+                                        DetailRestaurantState>(
+                                      builder: (context, state) {
+                                        final status = state.detailState.status;
+
+                                        if (status.isLoading) {
+                                          return const Skeleton(
+                                            height: 14,
+                                            width: 100,
+                                          );
+                                        } else if (status.isHasData) {
+                                          final address = state.detailState.data
+                                              ?.restaurant.address;
+                                          return Text(
+                                            "$address, ${widget.restaurant.city}",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium,
+                                          );
+                                        } else {
+                                          return Text(
+                                            widget.restaurant.city,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium,
+                                          );
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 10.0,
+                            ),
+                            Container(
+                              margin: const EdgeInsets.only(right: 16),
+                              child: Row(
+                                children: [
+                                  GFRating(
                                     color: GFColors.WARNING,
+                                    borderColor: GFColors.WARNING,
+                                    filledIcon: const Icon(
+                                      Icons.star,
+                                      color: GFColors.WARNING,
+                                      size: 20,
+                                    ),
                                     size: 20,
+                                    value: widget.restaurant.rating,
+                                    onChanged: (double rating) {},
                                   ),
-                                  size: 20,
-                                  value: widget.restaurant.rating,
-                                  onChanged: (double rating) {},
-                                ),
-                                const SizedBox(width: 4),
-                                Text(
-                                  widget.restaurant.rating.toString(),
-                                  style: Theme.of(context).textTheme.titleSmall,
-                                ),
-                              ],
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    widget.restaurant.rating.toString(),
+                                    style:
+                                        Theme.of(context).textTheme.titleSmall,
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-                      Container(
-                        margin: const EdgeInsets.only(right: 16),
-                        child: Text(
-                          widget.restaurant.description,
-                          style: Theme.of(context).textTheme.bodyMedium,
+                          ],
                         ),
-                      ),
-                      const SizedBox(height: 24),
-                      BlocConsumer<DetailRestaurantCubit,
-                          DetailRestaurantState>(
-                        listener: (context, state) {
-                          final statusAddReview = state.addReviewState.status;
-                          final statusDetail = state.detailState.status;
+                        const SizedBox(height: 12),
+                        Container(
+                          margin: const EdgeInsets.only(right: 16),
+                          child: Text(
+                            widget.restaurant.description,
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        BlocConsumer<DetailRestaurantCubit,
+                            DetailRestaurantState>(
+                          listener: (context, state) {
+                            final statusAddReview = state.addReviewState.status;
+                            final statusDetail = state.detailState.status;
 
-                          if (statusDetail.isError) {
-                            var snackBar = SnackBar(
-                              content: Text(state.detailState.message),
-                            );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
-                            EasyLoading.dismiss();
-                          }
+                            if (statusDetail.isError) {
+                              var snackBar = SnackBar(
+                                content: Text(state.detailState.message),
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                              EasyLoading.dismiss();
+                            }
 
-                          if (statusAddReview.isLoading) {
-                            EasyLoading.show(
-                              status: Strings.loading,
-                              maskType: EasyLoadingMaskType.black,
-                            );
-                          }
+                            if (statusAddReview.isLoading) {
+                              EasyLoading.show(
+                                status: Strings.loading,
+                                maskType: EasyLoadingMaskType.black,
+                              );
+                            }
 
-                          if (statusAddReview.isError) {
-                            var snackBar = SnackBar(
-                              content: Text(state.addReviewState.message),
-                            );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
-                            EasyLoading.dismiss();
-                          }
+                            if (statusAddReview.isError) {
+                              var snackBar = SnackBar(
+                                content: Text(state.addReviewState.message),
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                              EasyLoading.dismiss();
+                            }
 
-                          if (statusAddReview.isHasData) {
-                            EasyLoading.dismiss();
-                          }
-                        },
-                        builder: (context, state) {
-                          final status = state.detailState.status;
-                          if (status.isLoading) {
-                            return const DetailRestaurantLoading();
-                          } else if (status.isHasData) {
-                            final data = state.detailState.data;
-                            final category =
-                                data?.restaurant.categories.joinCategoryNames();
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                _buildCategory(context, category),
-                                const SizedBox(height: 12.0),
-                                _buildListFoods(data?.restaurant),
-                                const SizedBox(height: 12),
-                                _buildListDrinks(data?.restaurant),
-                                const SizedBox(
-                                  height: 12.0,
-                                ),
-                                _buildReviews(data),
-                                const SizedBox(
-                                  height: 50.0,
-                                ),
-                              ],
-                            );
-                          } else {
-                            return const SizedBox.shrink();
-                          }
-                        },
-                      ),
-                    ],
+                            if (statusAddReview.isHasData) {
+                              EasyLoading.dismiss();
+                            }
+                          },
+                          builder: (context, state) {
+                            final status = state.detailState.status;
+                            if (status.isLoading) {
+                              return const DetailRestaurantLoading();
+                            } else if (status.isHasData) {
+                              final data = state.detailState.data;
+                              final category = data?.restaurant.categories
+                                  .joinCategoryNames();
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  _buildCategory(context, category),
+                                  const SizedBox(height: 12.0),
+                                  _buildListFoods(data?.restaurant),
+                                  const SizedBox(height: 12),
+                                  _buildListDrinks(data?.restaurant),
+                                  const SizedBox(
+                                    height: 12.0,
+                                  ),
+                                  _buildReviews(data, state.listRandomPict),
+                                  const SizedBox(
+                                    height: 50.0,
+                                  ),
+                                ],
+                              );
+                            } else {
+                              return const SizedBox.shrink();
+                            }
+                          },
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
           _buildPopAndFav(context),
@@ -316,7 +322,8 @@ class _DetailRestaurantPageState extends State<DetailRestaurantPage> {
     );
   }
 
-  Widget _buildReviews(DetailRestaurantResponse? data) {
+  Widget _buildReviews(
+      DetailRestaurantResponse? data, List<String> listRandomPict) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -331,7 +338,7 @@ class _DetailRestaurantPageState extends State<DetailRestaurantPage> {
           padding: const EdgeInsets.symmetric(vertical: 12),
           itemBuilder: (context, index) {
             final review = data?.restaurant.customerReviews[index];
-            final randomPict = getRandomPict();
+            final randomPict = listRandomPict[index];
             return Container(
               margin: const EdgeInsets.only(bottom: 12),
               child: Column(
