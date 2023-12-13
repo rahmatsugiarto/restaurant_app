@@ -10,4 +10,10 @@ class Strings {
   static const String seeAll = "See All";
   static const String drinks = "Drinks";
   static const String notFound = "Not Found";
+  static const String reviews = "Reviews";
+  static const String category = "Category : ";
+  static const String somethingSeemsWrong = "Something seems wrong";
+  static const String errorNetwork = "There is a problem with your internet network";
+  static const String noDataRestaurant = "No Data Restaurant";
+  static const String loading = "loading...";
 }

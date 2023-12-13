@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:restaurant_app/common/assets.dart';
-import 'package:restaurant_app/common/debouncer.dart';
-import 'package:restaurant_app/common/strings.dart';
-import 'package:restaurant_app/common/styles.dart';
-import 'package:restaurant_app/model/restaurant_model.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:restaurant_app/common/res/strings.dart';
+import 'package:restaurant_app/common/res/styles.dart';
+import 'package:restaurant_app/common/utils/debouncer.dart';
+import 'package:restaurant_app/common/utils/view_data_state.dart';
+import 'package:restaurant_app/ui/blocs/search_bloc/search_cubit.dart';
+import 'package:restaurant_app/ui/blocs/search_bloc/search_state.dart';
+import 'package:restaurant_app/ui/widgets/home_loading.dart';
 import 'package:restaurant_app/ui/widgets/item_restaurant.dart';
 
 class SearchPage extends StatefulWidget {
@@ -19,21 +22,11 @@ class _SearchPageState extends State<SearchPage> {
   final TextEditingController controllerSearch = TextEditingController();
 
   final debouncer = Debouncer(milliseconds: 500);
-  List<Restaurant> listRestaurant = [];
-  List<Restaurant> listRestaurantSearch = [];
 
   @override
   void initState() {
     super.initState();
-    Future.microtask(() async {
-      final loadRestaurants = await DefaultAssetBundle.of(context).loadString(
-        Assets.localRestaurantJson,
-      );
-      setState(() {
-        listRestaurant = restaurantModelFromJson(loadRestaurants).restaurants;
-        listRestaurantSearch = listRestaurant;
-      });
-    });
+    _search("");
   }
 
   @override
@@ -42,16 +35,8 @@ class _SearchPageState extends State<SearchPage> {
     super.dispose();
   }
 
-  void search(String query) {
-    setState(() {
-      listRestaurantSearch = listRestaurant
-          .where(
-            (map) => map.name.toLowerCase().contains(
-                  query.toLowerCase(),
-                ),
-          )
-          .toList();
-    });
+  void _search(String query) {
+    context.read<SearchCubit>().searchRestaurant(query: query);
   }
 
   @override
@@ -60,7 +45,7 @@ class _SearchPageState extends State<SearchPage> {
       backgroundColor: secondaryColor,
       appBar: AppBar(
         elevation: 2,
-        backgroundColor: primaryColor,
+        backgroundColor: Colors.grey[100],
         automaticallyImplyLeading: false,
         flexibleSpace: SafeArea(
           child: Row(
@@ -72,7 +57,7 @@ class _SearchPageState extends State<SearchPage> {
                 },
                 icon: const Icon(
                   Icons.arrow_back,
-                  color: secondaryColor,
+                  color: primaryColor,
                 ),
               ),
               Expanded(
@@ -80,9 +65,10 @@ class _SearchPageState extends State<SearchPage> {
                   controller: controllerSearch,
                   autofocus: true,
                   keyboardType: TextInputType.text,
+                  style: Theme.of(context).textTheme.bodyMedium,
                   onChanged: (value) {
                     debouncer.run(() {
-                      search(value);
+                      _search(value);
                     });
                   },
                   onTapOutside: (_) {
@@ -100,19 +86,22 @@ class _SearchPageState extends State<SearchPage> {
                     ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
-                      borderSide: const BorderSide(
+                      borderSide: BorderSide(
+                        color: Colors.grey.shade100,
                         width: 1,
                       ),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
-                      borderSide: const BorderSide(
+                      borderSide: BorderSide(
+                        color: Colors.grey.shade100,
                         width: 1,
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
-                      borderSide: const BorderSide(
+                      borderSide: BorderSide(
+                        color: Colors.grey.shade100,
                         width: 1,
                       ),
                     ),
@@ -126,29 +115,46 @@ class _SearchPageState extends State<SearchPage> {
           ),
         ),
       ),
-      body: Builder(builder: (context) {
-        if (listRestaurantSearch.isNotEmpty) {
-          return ListView.builder(
-            itemCount: listRestaurantSearch.length,
-            padding: const EdgeInsets.symmetric(
-              horizontal: 20,
-              vertical: 10,
-            ),
-            itemBuilder: (context, index) {
-              return ItemRestaurant(
-                restaurant: listRestaurantSearch[index],
-              );
-            },
-          );
-        } else {
-          return Center(
-            child: Text(
-              Strings.notFound,
-              style: Theme.of(context).textTheme.bodyLarge,
-            ),
-          );
-        }
-      }),
+      body: BlocBuilder<SearchCubit, SearchState>(
+        builder: (context, state) {
+          final status = state.searchState.status;
+
+          if (status.isLoading) {
+            return Container(
+              margin: const EdgeInsets.only(
+                top: 20,
+                right: 20,
+                left: 20,
+              ),
+              child: const HomeLoading(),
+            );
+          } else if (status.isNoData || status.isError) {
+            return Center(
+              child: Text(
+                state.searchState.message,
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+            );
+          } else if (status.isHasData) {
+            final resultSearch = state.searchState.data?.restaurants ?? [];
+
+            return ListView.builder(
+              itemCount: resultSearch.length,
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20,
+                vertical: 10,
+              ),
+              itemBuilder: (context, index) {
+                return ItemRestaurant(
+                  restaurant: resultSearch[index],
+                );
+              },
+            );
+          } else {
+            return const SizedBox.shrink();
+          }
+        },
+      ),
     );
   }
 }

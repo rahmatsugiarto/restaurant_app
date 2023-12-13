@@ -1,21 +1,49 @@
 import 'package:flutter/material.dart';
-import 'package:restaurant_app/common/assets.dart';
-import 'package:restaurant_app/common/strings.dart';
-import 'package:restaurant_app/model/restaurant_model.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:restaurant_app/common/res/assets.dart';
+import 'package:restaurant_app/common/res/strings.dart';
+import 'package:restaurant_app/common/utils/view_data_state.dart';
+import 'package:restaurant_app/data/model/list_restaurant_response.dart';
+import 'package:restaurant_app/ui/blocs/home_bloc/home_cubit.dart';
+import 'package:restaurant_app/ui/blocs/home_bloc/home_state.dart';
+import 'package:restaurant_app/ui/widgets/custom_refresh_indicator.dart';
+import 'package:restaurant_app/ui/widgets/home_loading.dart';
 import 'package:restaurant_app/ui/widgets/item_restaurant.dart';
 
 import 'search_page.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   static const routeName = '/home_page';
 
   const HomePage({Key? key}) : super(key: key);
 
   @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<HomeCubit>().getListRestaurant();
+  }
+
+  void _getListRestaurant() {
+    context.read<HomeCubit>().getListRestaurant();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
-        body: SingleChildScrollView(
+      backgroundColor: Colors.white,
+      body: CustomRefreshIndicator(
+        onRefresh: () async {
+          _getListRestaurant();
+        },
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(
+            parent: BouncingScrollPhysics(),
+          ),
           child: Column(
             children: [
               const SizedBox(
@@ -86,69 +114,40 @@ class HomePage extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 12),
-                    FutureBuilder<String>(
-                      /// Memakai Future.delayed untuk memperlihatkan efek loading saja.
-                      future: Future.delayed(
-                        const Duration(seconds: 1),
-                        () {
-                          return DefaultAssetBundle.of(context).loadString(
-                            Assets.localRestaurantJson,
-                          );
-                        },
-                      ),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState != ConnectionState.done) {
+                    BlocBuilder<HomeCubit, HomeState>(
+                      builder: (context, state) {
+                        final status = state.homeState.status;
+
+                        if (status.isLoading) {
+                          return const HomeLoading();
+                        } else if (status.isNoData || status.isError) {
                           return Column(
                             children: [
                               SizedBox(
                                 height: MediaQuery.sizeOf(context).height / 4,
                               ),
-                              const Center(
-                                child: CircularProgressIndicator(),
+                              Center(
+                                child: Text(state.homeState.message),
                               ),
                             ],
                           );
+                        } else if (status.isHasData) {
+                          final restaurants =
+                              state.homeState.data?.restaurants ??
+                                  <Restaurant>[];
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            padding: EdgeInsets.zero,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: restaurants.length,
+                            itemBuilder: (context, index) {
+                              return ItemRestaurant(
+                                restaurant: restaurants[index],
+                              );
+                            },
+                          );
                         } else {
-                          if (snapshot.hasData) {
-                            final RestaurantModel restaurantModel =
-                                restaurantModelFromJson(
-                              snapshot.data.toString(),
-                            );
-                            return ListView.builder(
-                              shrinkWrap: true,
-                              padding: EdgeInsets.zero,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemCount: restaurantModel.restaurants.length,
-                              itemBuilder: (context, index) {
-                                return ItemRestaurant(
-                                  restaurant:
-                                      restaurantModel.restaurants[index],
-                                );
-                              },
-                            );
-                          } else if (snapshot.hasError) {
-                            return Column(
-                              children: [
-                                SizedBox(
-                                  height: MediaQuery.sizeOf(context).height / 4,
-                                ),
-                                Center(
-                                  child: Text(snapshot.error.toString()),
-                                ),
-                              ],
-                            );
-                          } else {
-                            return Column(
-                              children: [
-                                SizedBox(
-                                  height: MediaQuery.sizeOf(context).height / 4,
-                                ),
-                                const Center(
-                                  child: CircularProgressIndicator(),
-                                ),
-                              ],
-                            );
-                          }
+                          return const SizedBox.shrink();
                         }
                       },
                     ),
@@ -157,6 +156,8 @@ class HomePage extends StatelessWidget {
               )
             ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 }
