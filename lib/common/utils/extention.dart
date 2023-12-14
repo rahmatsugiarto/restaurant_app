@@ -1,4 +1,4 @@
-import 'package:restaurant_app/data/model/detail_restaurant_response.dart';
+import 'package:restaurant_app/data/model/category.dart';
 
 extension JoinCategoryNames on List<Category> {
   String joinCategoryNames() {

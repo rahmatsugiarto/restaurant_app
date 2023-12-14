@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restaurant_app/common/res/assets.dart';
 import 'package:restaurant_app/common/res/strings.dart';
 import 'package:restaurant_app/common/utils/view_data_state.dart';
-import 'package:restaurant_app/data/model/list_restaurant_response.dart';
+import 'package:restaurant_app/data/model/restaurant.dart';
 import 'package:restaurant_app/ui/blocs/home_bloc/home_cubit.dart';
 import 'package:restaurant_app/ui/blocs/home_bloc/home_state.dart';
 import 'package:restaurant_app/ui/pages/detail_restaurant_page.dart';

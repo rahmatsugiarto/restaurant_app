@@ -15,7 +15,7 @@ class Strings {
   static const String somethingSeemsWrong = "Something seems wrong";
   static const String errorNetwork =
       "There is a problem with your internet network";
-  static const String noDataRestaurant = "No Data Restaurant";
+  static const String noDataRestaurant = "p";
   static const String loading = "loading...";
   static const String notHaveFavorite = "You don't have a favorite yet";
   static const String home = "Home";

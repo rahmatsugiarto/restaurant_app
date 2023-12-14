@@ -1,16 +1,17 @@
 import 'dart:convert';
 
-import 'package:restaurant_app/data/model/list_restaurant_response.dart';
+import 'package:equatable/equatable.dart';
+import 'package:restaurant_app/data/model/restaurant.dart';
 
 SearchRestaurantResponse searchRestaurantResponseFromJson(String str) =>
     SearchRestaurantResponse.fromJson(json.decode(str));
 
-class SearchRestaurantResponse {
-  bool error;
-  int founded;
-  List<Restaurant> restaurants;
+class SearchRestaurantResponse extends Equatable {
+  final bool error;
+  final int founded;
+  final List<Restaurant> restaurants;
 
-  SearchRestaurantResponse({
+  const SearchRestaurantResponse({
     required this.error,
     required this.founded,
     required this.restaurants,
@@ -23,4 +24,7 @@ class SearchRestaurantResponse {
         restaurants: List<Restaurant>.from(
             json["restaurants"].map((x) => Restaurant.fromJson(x))),
       );
+
+  @override
+  List<Object?> get props => [error, founded, restaurants];
 }

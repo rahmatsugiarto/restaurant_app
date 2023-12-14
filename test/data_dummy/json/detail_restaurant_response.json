@@ -1,0 +1,38 @@
+{
+    "error": false,
+    "message": "success",
+    "restaurant": {
+        "id": "rqdv5juczeskfw1e867",
+        "name": "Melting Pot",
+        "description": "description",
+        "city": "Medan",
+        "address": "Jln. Pandeglang no 19",
+        "pictureId": "14",
+        "categories": [
+            {
+                "name": "Italia"
+            }
+        ],
+        "menus": {
+            "foods": [
+                {
+                    "name": "Paket rosemary"
+                }
+            ],
+            "drinks": [
+                {
+                    "name": "Es krim"
+                }
+            ]
+        },
+        "rating": 4.2,
+        "customerReviews": [
+            {
+                "name": "Ahmad",
+                "review": "Tidak rekomendasi untuk pelajar!",
+                "date": "13 November 2019"
+            }
+        ]
+    }
+  }
+  

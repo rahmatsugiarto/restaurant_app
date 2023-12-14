@@ -12,6 +12,7 @@ import 'package:restaurant_app/common/utils/background_service.dart';
 import 'package:restaurant_app/common/utils/notification_helper.dart';
 import 'package:restaurant_app/data/local/database_helper.dart';
 import 'package:restaurant_app/data/local/preferences_helper.dart';
+import 'package:restaurant_app/data/model/restaurant.dart';
 import 'package:restaurant_app/data/remote/api_service.dart';
 import 'package:restaurant_app/ui/blocs/detail_restaurant_bloc/detail_restaurant_cubit.dart';
 import 'package:restaurant_app/ui/blocs/favorite_bloc/favorite_cubit.dart';
@@ -26,8 +27,6 @@ import 'package:restaurant_app/ui/pages/search_page.dart';
 import 'package:restaurant_app/ui/pages/setting_page.dart';
 import 'package:restaurant_app/ui/pages/splash_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'data/model/list_restaurant_response.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();

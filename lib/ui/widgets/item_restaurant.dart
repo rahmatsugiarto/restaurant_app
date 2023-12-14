@@ -2,8 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:restaurant_app/common/constant/app_constant.dart';
-
-import '../../data/model/list_restaurant_response.dart';
+import 'package:restaurant_app/data/model/restaurant.dart';
 
 class ItemRestaurant extends StatelessWidget {
   final Restaurant restaurant;

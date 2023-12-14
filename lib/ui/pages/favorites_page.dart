@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restaurant_app/common/utils/view_data_state.dart';
-import 'package:restaurant_app/data/model/list_restaurant_response.dart';
+import 'package:restaurant_app/data/model/restaurant.dart';
 import 'package:restaurant_app/ui/blocs/favorite_bloc/favorite_cubit.dart';
 import 'package:restaurant_app/ui/blocs/favorite_bloc/favorite_state.dart';
 import 'package:restaurant_app/ui/pages/detail_restaurant_page.dart';

@@ -1,5 +1,5 @@
 import 'package:restaurant_app/common/utils/view_data_state.dart';
-import 'package:restaurant_app/data/model/list_restaurant_response.dart';
+import 'package:restaurant_app/data/model/restaurant.dart';
 
 class FavoriteState {
   final ViewData<List<Restaurant>> favState;
