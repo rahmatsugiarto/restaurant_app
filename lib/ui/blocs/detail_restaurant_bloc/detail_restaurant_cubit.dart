@@ -5,8 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restaurant_app/common/res/strings.dart';
 import 'package:restaurant_app/common/utils/random_pict.dart';
 import 'package:restaurant_app/common/utils/view_data_state.dart';
-import 'package:restaurant_app/data/api/api_service.dart';
-import 'package:restaurant_app/data/db/database_helper.dart';
+import 'package:restaurant_app/data/remote/api_service.dart';
+import 'package:restaurant_app/data/local/database_helper.dart';
 import 'package:restaurant_app/data/model/list_restaurant_response.dart';
 
 import 'detail_restaurant_state.dart';

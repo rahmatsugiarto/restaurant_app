@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:restaurant_app/common/res/strings.dart';
+import 'package:restaurant_app/ui/blocs/setting_bloc/setting_cubit.dart';
+import 'package:restaurant_app/ui/blocs/setting_bloc/setting_state.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
@@ -8,8 +12,6 @@ class SettingPage extends StatefulWidget {
 }
 
 class _SettingPageState extends State<SettingPage> {
-  bool light1 = true;
-
   final MaterialStateProperty<Icon?> thumbIcon =
       MaterialStateProperty.resolveWith<Icon?>(
     (Set<MaterialState> states) {
@@ -19,52 +21,57 @@ class _SettingPageState extends State<SettingPage> {
       return const Icon(Icons.close);
     },
   );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
         title: Text(
-          "Setting",
+          Strings.setting,
           style: Theme.of(context).textTheme.headlineSmall,
         ),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: BlocBuilder<SettingCubit, SettingState>(
+        builder: (context, state) {
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      "Restaurant Notification",
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          Strings.restaurantNotification,
+                          style:
+                              Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                        ),
+                        Text(
+                          Strings.enableNotification,
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                      ],
                     ),
-                    Text(
-                      "Enable Notification",
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(),
+                    Switch(
+                      thumbIcon: thumbIcon,
+                      value: state.isScheduled,
+                      activeColor: Colors.green,
+                      onChanged: (bool value) {
+                        debugPrint(value.toString());
+                        context.read<SettingCubit>().enableNotification(value);
+                      },
                     ),
                   ],
                 ),
-                Switch(
-                  thumbIcon: thumbIcon,
-                  value: light1,
-                  activeColor: Colors.green,
-                  onChanged: (bool value) {
-                    setState(() {
-                      light1 = value;
-                    });
-                  },
-                ),
               ],
             ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }

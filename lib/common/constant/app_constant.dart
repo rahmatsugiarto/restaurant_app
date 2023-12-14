@@ -9,4 +9,6 @@ class AppConstant {
 
   static const String imageUrl =
       "https://restaurant-api.dicoding.dev/images/medium/";
+
+  static const String notificationPrefKey = 'notification_pref_key';
 }

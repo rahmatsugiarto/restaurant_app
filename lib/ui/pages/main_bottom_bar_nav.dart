@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:restaurant_app/common/res/strings.dart';
 import 'package:restaurant_app/common/res/styles.dart';
-import 'package:restaurant_app/data/api/api_service.dart';
-import 'package:restaurant_app/data/db/database_helper.dart';
-import 'package:restaurant_app/ui/blocs/favorite_bloc/favorite_cubit.dart';
-import 'package:restaurant_app/ui/blocs/home_bloc/home_cubit.dart';
 import 'package:restaurant_app/ui/pages/favorites_page.dart';
 import 'package:restaurant_app/ui/pages/home_page.dart';
 import 'package:restaurant_app/ui/pages/setting_page.dart';
@@ -21,15 +17,9 @@ class MainBottomBarNav extends StatefulWidget {
 class _MainBottomBarNavState extends State<MainBottomBarNav> {
   var currentIndex = 0;
 
-  final listPage = [
-    BlocProvider(
-      create: (context) => HomeCubit(apiService: ApiService()),
-      child: const HomePage(),
-    ),
-    BlocProvider(
-      create: (context) => FavoriteCubit(db: DatabaseHelper()),
-      child: const FavoritesPage(),
-    ),
+  final List<Widget> listPage = [
+    const HomePage(),
+    const FavoritesPage(),
     const SettingPage(),
   ];
 
@@ -44,7 +34,7 @@ class _MainBottomBarNavState extends State<MainBottomBarNav> {
           SalomonBottomBarItem(
             icon: const Icon(Icons.home),
             title: Text(
-              "Home",
+              Strings.home,
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             selectedColor: primaryColor,
@@ -52,7 +42,7 @@ class _MainBottomBarNavState extends State<MainBottomBarNav> {
           SalomonBottomBarItem(
             icon: const Icon(Icons.favorite_border),
             title: Text(
-              "Favorite",
+              Strings.favorite,
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             selectedColor: Colors.pink,
@@ -60,7 +50,7 @@ class _MainBottomBarNavState extends State<MainBottomBarNav> {
           SalomonBottomBarItem(
             icon: const Icon(Icons.settings),
             title: Text(
-              "Setting",
+              Strings.setting,
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             selectedColor: primaryColor,

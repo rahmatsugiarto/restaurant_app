@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:restaurant_app/common/res/strings.dart';
 import 'package:restaurant_app/common/utils/view_data_state.dart';
-import 'package:restaurant_app/data/db/database_helper.dart';
+import 'package:restaurant_app/data/local/database_helper.dart';
 
 import 'favorite_state.dart';
 
@@ -18,7 +19,7 @@ class FavoriteCubit extends Cubit<FavoriteState> {
     } else {
       emit(state.copyWith(
           favState: ViewData.noData(
-        message: "You don't have a favorite yet",
+        message: Strings.notHaveFavorite,
       )));
     }
   }
