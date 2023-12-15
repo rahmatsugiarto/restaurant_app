@@ -1,6 +1,10 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restaurant_app/common/res/strings.dart';
+import 'package:restaurant_app/common/utils/navigation.dart';
 import 'package:restaurant_app/ui/blocs/setting_bloc/setting_cubit.dart';
 import 'package:restaurant_app/ui/blocs/setting_bloc/setting_state.dart';
 
@@ -62,8 +66,17 @@ class _SettingPageState extends State<SettingPage> {
                       value: state.isScheduled,
                       activeColor: Colors.green,
                       onChanged: (bool value) {
-                        debugPrint(value.toString());
-                        context.read<SettingCubit>().enableNotification(value);
+                        if (Platform.isIOS) {
+                          customDialog(context);
+                        } else {
+                          context
+                              .read<SettingCubit>()
+                              .enableNotification(value);
+
+                          context
+                              .read<SettingCubit>()
+                              .scheduledNotification(value);
+                        }
                       },
                     ),
                   ],
@@ -73,6 +86,47 @@ class _SettingPageState extends State<SettingPage> {
           );
         },
       ),
+    );
+  }
+}
+
+customDialog(BuildContext context) {
+  if (Platform.isIOS) {
+    showCupertinoDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) {
+        return CupertinoAlertDialog(
+          title: const Text('Coming Soon!'),
+          content: const Text('This feature will be coming soon!'),
+          actions: [
+            CupertinoDialogAction(
+              child: const Text('Ok'),
+              onPressed: () {
+                Navigation.back();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  } else {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Coming Soon!'),
+          content: const Text('This feature will be coming soon!'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigation.back();
+              },
+              child: const Text('Ok'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

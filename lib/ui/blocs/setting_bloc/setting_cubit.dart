@@ -17,7 +17,7 @@ class SettingCubit extends Cubit<SettingState> {
     emit(state.copyWith(isScheduled: value));
 
     if (state.isScheduled) {
-      debugPrint('Scheduling News Activated');
+      debugPrint('Scheduling Notification Activated');
       return await AndroidAlarmManager.periodic(
         const Duration(hours: 24),
         1,
@@ -27,7 +27,7 @@ class SettingCubit extends Cubit<SettingState> {
         wakeup: true,
       );
     } else {
-      debugPrint('Scheduling News Canceled');
+      debugPrint('Scheduling Notification Canceled');
       emit(state.copyWith(isScheduled: value));
       return await AndroidAlarmManager.cancel(1);
     }
@@ -36,8 +36,6 @@ class SettingCubit extends Cubit<SettingState> {
   void getNotificationPreferences() async {
     final result = await preferencesHelper.isNotificationActive;
     emit(state.copyWith(isScheduled: result));
-
-    scheduledNotification(result);
   }
 
   void enableNotification(bool value) {

@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:restaurant_app/common/utils/navigation.dart';
+import 'package:restaurant_app/data/model/restaurant.dart';
 import 'package:rxdart/rxdart.dart';
 
 final selectNotificationSubject = BehaviorSubject<String>();
@@ -12,6 +16,16 @@ class NotificationHelper {
   }
 
   factory NotificationHelper() => _instance ?? NotificationHelper._internal();
+
+  void requestPermission() {
+    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+        FlutterLocalNotificationsPlugin();
+
+    flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.requestNotificationsPermission();
+  }
 
   Future<void> initNotifications(
       FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin) async {
@@ -41,16 +55,18 @@ class NotificationHelper {
 
   Future<void> showNotification(
     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin,
+    Restaurant listRestaurantResponse,
   ) async {
     var channelId = "1";
     var channelName = "channel_01";
     var channelDescription = "restaurant channel";
     var titleNotification = "<b>Recommended Restaurant</b>";
-    var titleNews =
-        "You are hungry? Here there are recommended restaurant choices for you, come check them out now!";
+    var restaurantName = listRestaurantResponse.name;
+    var titleRestaurant =
+        "You are hungry? There is a $restaurantName, recommended for you, come check it out now!";
 
     var bigTextStyleInformation = BigTextStyleInformation(
-      titleNews,
+      titleRestaurant,
       htmlFormatContent: true,
       htmlFormatTitle: true,
     );
@@ -74,8 +90,19 @@ class NotificationHelper {
     await flutterLocalNotificationsPlugin.show(
       0,
       titleNotification,
-      titleNews,
+      titleRestaurant,
       platformChannelSpecifics,
+      payload: json.encode(listRestaurantResponse.toJson()),
+    );
+  }
+
+  void configureSelectNotificationSubject(String route) {
+    selectNotificationSubject.stream.listen(
+      (String payload) async {
+        var data = Restaurant.fromJson(json.decode(payload));
+
+        Navigation.intentWithData(route, data);
+      },
     );
   }
 }

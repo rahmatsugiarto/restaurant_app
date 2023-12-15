@@ -9,6 +9,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:restaurant_app/common/res/strings.dart';
 import 'package:restaurant_app/common/res/styles.dart';
 import 'package:restaurant_app/common/utils/background_service.dart';
+import 'package:restaurant_app/common/utils/navigation.dart';
 import 'package:restaurant_app/common/utils/notification_helper.dart';
 import 'package:restaurant_app/data/local/database_helper.dart';
 import 'package:restaurant_app/data/local/preferences_helper.dart';
@@ -33,8 +34,12 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   final NotificationHelper notificationHelper = NotificationHelper();
   final BackgroundService service = BackgroundService();
+
+  notificationHelper.requestPermission();
+
   service.initializeIsolate();
   if (Platform.isAndroid) {
     await AndroidAlarmManager.initialize();
@@ -93,6 +98,7 @@ class MyApp extends StatelessWidget {
               ),
         ),
         builder: EasyLoading.init(),
+        navigatorKey: navigatorKey,
         home: const SplashPage(),
         routes: {
           MainBottomBarNav.routeName: (context) => const MainBottomBarNav(),

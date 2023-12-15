@@ -28,6 +28,13 @@ class ListRestaurantResponse extends Equatable {
             json["restaurants"].map((x) => Restaurant.fromJson(x))),
       );
 
+  Map<String, dynamic> toJson() => {
+        "error": error,
+        "message": message,
+        "count": count,
+        "restaurants": List<dynamic>.from(restaurants.map((x) => x.toJson())),
+      };
+
   @override
   List<Object?> get props => [error, message, count, restaurants];
 }

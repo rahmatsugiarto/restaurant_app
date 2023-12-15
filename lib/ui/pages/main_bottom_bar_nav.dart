@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:restaurant_app/common/res/strings.dart';
 import 'package:restaurant_app/common/res/styles.dart';
+import 'package:restaurant_app/common/utils/notification_helper.dart';
+import 'package:restaurant_app/ui/pages/detail_restaurant_page.dart';
 import 'package:restaurant_app/ui/pages/favorites_page.dart';
 import 'package:restaurant_app/ui/pages/home_page.dart';
 import 'package:restaurant_app/ui/pages/setting_page.dart';
@@ -16,12 +18,27 @@ class MainBottomBarNav extends StatefulWidget {
 
 class _MainBottomBarNavState extends State<MainBottomBarNav> {
   var currentIndex = 0;
+  final NotificationHelper _notificationHelper = NotificationHelper();
 
   final List<Widget> listPage = [
     const HomePage(),
     const FavoritesPage(),
     const SettingPage(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+
+    _notificationHelper
+        .configureSelectNotificationSubject(DetailRestaurantPage.routeName);
+  }
+
+  @override
+  void dispose() {
+    selectNotificationSubject.close();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
