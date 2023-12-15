@@ -127,11 +127,12 @@ class _SearchPageState extends State<SearchPage> {
                 right: 20,
                 left: 20,
               ),
-              child: const HomeLoading(),
+              child: const ListLoading(),
             );
           } else if (status.isNoData || status.isError) {
             return Center(
               child: Text(
+                key: const Key('error_message'),
                 state.searchState.message,
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
@@ -146,7 +147,7 @@ class _SearchPageState extends State<SearchPage> {
                 vertical: 10,
               ),
               itemBuilder: (context, index) {
-              return ItemRestaurant(
+                return ItemRestaurant(
                   restaurant: resultSearch[index],
                   onTap: () {
                     Navigator.of(context).pushNamed(

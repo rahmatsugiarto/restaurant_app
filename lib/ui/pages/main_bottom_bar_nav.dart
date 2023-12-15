@@ -49,7 +49,10 @@ class _MainBottomBarNavState extends State<MainBottomBarNav> {
         onTap: (i) => setState(() => currentIndex = i),
         items: [
           SalomonBottomBarItem(
-            icon: const Icon(Icons.home),
+            icon: const Icon(
+              Icons.home,
+              key: Key("home_button"),
+            ),
             title: Text(
               Strings.home,
               style: Theme.of(context).textTheme.bodyMedium,
@@ -57,7 +60,10 @@ class _MainBottomBarNavState extends State<MainBottomBarNav> {
             selectedColor: primaryColor,
           ),
           SalomonBottomBarItem(
-            icon: const Icon(Icons.favorite_border),
+            icon: const Icon(
+              Icons.favorite_border,
+              key: Key("favorite_button"),
+            ),
             title: Text(
               Strings.favorite,
               style: Theme.of(context).textTheme.bodyMedium,
@@ -65,7 +71,10 @@ class _MainBottomBarNavState extends State<MainBottomBarNav> {
             selectedColor: Colors.pink,
           ),
           SalomonBottomBarItem(
-            icon: const Icon(Icons.settings),
+            icon: const Icon(
+              Icons.settings,
+              key: Key("setting_button"),
+            ),
             title: Text(
               Strings.setting,
               style: Theme.of(context).textTheme.bodyMedium,

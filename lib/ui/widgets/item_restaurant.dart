@@ -17,6 +17,7 @@ class ItemRestaurant extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      key: key,
       onTap: onTap,
       child: Container(
         color: Colors.white,

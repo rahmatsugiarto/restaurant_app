@@ -18,4 +18,28 @@ void main() {
       expect(result, DataDummyModel.tListRestaurantResponse);
     });
   });
+
+  group('toJson', () {
+    test('should return a JSON map containing proper data', () async {
+      final result = DataDummyModel.tListRestaurantResponse.toJson();
+
+      final expectedJsonMap = {
+        "error": false,
+        "message": "success",
+        "count": 20,
+        "restaurants": [
+          {
+            "id": "rqdv5juczeskfw1e867",
+            "name": "Melting Pot",
+            "description": "description",
+            "pictureId": "14",
+            "city": "Medan",
+            "rating": 4.2
+          }
+        ]
+      };
+
+      expect(result, expectedJsonMap);
+    });
+  });
 }

@@ -118,7 +118,7 @@ class _HomePageState extends State<HomePage> {
                         final status = state.homeState.status;
 
                         if (status.isLoading) {
-                          return const HomeLoading();
+                          return const ListLoading();
                         } else if (status.isNoData || status.isError) {
                           return Column(
                             children: [
@@ -126,7 +126,10 @@ class _HomePageState extends State<HomePage> {
                                 height: MediaQuery.sizeOf(context).height / 4,
                               ),
                               Center(
-                                child: Text(state.homeState.message),
+                                child: Text(
+                                  key: const Key("error_message"),
+                                  state.homeState.message,
+                                ),
                               ),
                             ],
                           );

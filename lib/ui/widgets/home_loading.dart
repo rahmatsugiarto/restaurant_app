@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:restaurant_app/ui/widgets/skeleton.dart';
 
-class HomeLoading extends StatelessWidget {
-  const HomeLoading({super.key});
+class ListLoading extends StatelessWidget {
+  const ListLoading({super.key});
 
   @override
   Widget build(BuildContext context) {

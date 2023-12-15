@@ -47,11 +47,14 @@ class _FavoritesPageState extends State<FavoritesPage> {
                 right: 20,
                 left: 20,
               ),
-              child: const HomeLoading(),
+              child: const ListLoading(),
             );
           } else if (status.isNoData || status.isError) {
             return Center(
-              child: Text(state.favState.message),
+              child: Text(
+                key: const Key('error_message'),
+                state.favState.message,
+              ),
             );
           } else if (status.isHasData) {
             final restaurants = state.favState.data ?? <Restaurant>[];

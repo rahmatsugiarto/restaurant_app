@@ -14,6 +14,9 @@ class DataDummyModel {
 
   static const tDrink = Category(name: "Es krim");
 
+  static const tListRestaurant = [tRestaurant];
+
+
   static const tCustomerReview = CustomerReview(
     name: "Ahmad",
     review: "Tidak rekomendasi untuk pelajar!",
