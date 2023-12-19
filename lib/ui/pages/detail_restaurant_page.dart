@@ -12,7 +12,8 @@ import 'package:restaurant_app/common/res/styles.dart';
 import 'package:restaurant_app/common/utils/extention.dart';
 import 'package:restaurant_app/common/utils/view_data_state.dart';
 import 'package:restaurant_app/data/model/detail_restaurant_response.dart';
-import 'package:restaurant_app/data/model/list_restaurant_response.dart';
+import 'package:restaurant_app/data/model/restaurant.dart';
+import 'package:restaurant_app/data/model/restaurant_detail.dart';
 import 'package:restaurant_app/ui/blocs/detail_restaurant_bloc/detail_restaurant_cubit.dart';
 import 'package:restaurant_app/ui/blocs/detail_restaurant_bloc/detail_restaurant_state.dart';
 import 'package:restaurant_app/ui/widgets/bottom_sheet_add_review.dart';
@@ -37,6 +38,9 @@ class _DetailRestaurantPageState extends State<DetailRestaurantPage> {
   @override
   void initState() {
     super.initState();
+    // Future.microtask(() {
+    isBookmarked();
+
     _getDetailRestaurant();
 
     SystemChrome.setSystemUIOverlayStyle(
@@ -46,6 +50,7 @@ class _DetailRestaurantPageState extends State<DetailRestaurantPage> {
         statusBarBrightness: Brightness.light,
       ),
     );
+    // });
   }
 
   @override
@@ -65,6 +70,10 @@ class _DetailRestaurantPageState extends State<DetailRestaurantPage> {
           idRestaurant: widget.restaurant.id,
           review: review,
         );
+  }
+
+  void isBookmarked() {
+    context.read<DetailRestaurantCubit>().checkFavorited(widget.restaurant.id);
   }
 
   @override
@@ -562,7 +571,9 @@ class _DetailRestaurantPageState extends State<DetailRestaurantPage> {
                           color: Colors.red,
                         ),
                   onPressed: () {
-                    context.read<DetailRestaurantCubit>().setIsFav();
+                    context
+                        .read<DetailRestaurantCubit>()
+                        .saveFavorite(widget.restaurant);
                   },
                 ),
               );

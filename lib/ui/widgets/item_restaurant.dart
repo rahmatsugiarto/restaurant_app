@@ -2,27 +2,23 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:restaurant_app/common/constant/app_constant.dart';
-import 'package:restaurant_app/ui/pages/detail_restaurant_page.dart';
-
-import '../../data/model/list_restaurant_response.dart';
+import 'package:restaurant_app/data/model/restaurant.dart';
 
 class ItemRestaurant extends StatelessWidget {
   final Restaurant restaurant;
+  final void Function()? onTap;
 
   const ItemRestaurant({
     required this.restaurant,
+    required this.onTap,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Navigator.of(context).pushNamed(
-          DetailRestaurantPage.routeName,
-          arguments: restaurant,
-        );
-      },
+      key: key,
+      onTap: onTap,
       child: Container(
         color: Colors.white,
         height: 100,

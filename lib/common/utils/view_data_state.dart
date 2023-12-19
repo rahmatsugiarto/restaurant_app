@@ -1,3 +1,5 @@
+import 'package:equatable/equatable.dart';
+
 enum ViewState { initial, loading, error, hasData, noData }
 
 extension ViewStateExtension on ViewState {
@@ -12,7 +14,7 @@ extension ViewStateExtension on ViewState {
   bool get isNoData => this == ViewState.noData;
 }
 
-class ViewData<T> {
+class ViewData<T> extends Equatable {
   final ViewState status;
   final T? data;
   final String message;
@@ -47,4 +49,11 @@ class ViewData<T> {
   factory ViewData.noData({required String message}) {
     return ViewData._(status: ViewState.noData, message: message);
   }
+
+  @override
+  List<Object?> get props => [
+        status,
+        data,
+        message,
+      ];
 }

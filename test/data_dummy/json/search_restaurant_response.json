@@ -1,0 +1,14 @@
+{
+    "error": false,
+    "founded": 1,
+    "restaurants": [
+        {
+            "id": "rqdv5juczeskfw1e867",
+            "name": "Melting Pot",
+            "description": "description",
+            "pictureId": "14",
+            "city": "Medan",
+            "rating": 4.2
+        }
+    ]
+  }
