@@ -5,65 +5,65 @@ const Color secondaryColor = Color(0xFFFFFFFF);
 const Color primaryColor = Color(0xFF000000);
 
 final TextTheme myTextTheme = TextTheme(
-  displayLarge: GoogleFonts.roboto(
+  displayLarge: GoogleFonts.poppins(
     fontSize: 96,
     fontWeight: FontWeight.w300,
     letterSpacing: -1.5,
   ),
-  displayMedium: GoogleFonts.roboto(
+  displayMedium: GoogleFonts.poppins(
     fontSize: 60,
     fontWeight: FontWeight.w300,
     letterSpacing: -0.5,
   ),
-  displaySmall: GoogleFonts.roboto(
+  displaySmall: GoogleFonts.poppins(
     fontSize: 48,
     fontWeight: FontWeight.w400,
   ),
-  headlineMedium: GoogleFonts.roboto(
+  headlineMedium: GoogleFonts.poppins(
     fontSize: 34,
     fontWeight: FontWeight.w400,
     letterSpacing: 0.25,
   ),
-  headlineSmall: GoogleFonts.roboto(
+  headlineSmall: GoogleFonts.poppins(
     fontSize: 24,
     fontWeight: FontWeight.w400,
   ),
-  titleLarge: GoogleFonts.roboto(
+  titleLarge: GoogleFonts.poppins(
     fontSize: 20,
     fontWeight: FontWeight.w500,
     letterSpacing: 0.15,
   ),
-  titleMedium: GoogleFonts.roboto(
+  titleMedium: GoogleFonts.poppins(
     fontSize: 16,
     fontWeight: FontWeight.w400,
     letterSpacing: 0.15,
   ),
-  titleSmall: GoogleFonts.roboto(
+  titleSmall: GoogleFonts.poppins(
     fontSize: 14,
     fontWeight: FontWeight.w500,
     letterSpacing: 0.1,
   ),
-  bodyLarge: GoogleFonts.roboto(
+  bodyLarge: GoogleFonts.poppins(
     fontSize: 16,
     fontWeight: FontWeight.w400,
     letterSpacing: 0.5,
   ),
-  bodyMedium: GoogleFonts.roboto(
+  bodyMedium: GoogleFonts.poppins(
     fontSize: 14,
     fontWeight: FontWeight.w400,
     letterSpacing: 0.25,
   ),
-  labelLarge: GoogleFonts.roboto(
+  labelLarge: GoogleFonts.poppins(
     fontSize: 14,
     fontWeight: FontWeight.w500,
     letterSpacing: 1.25,
   ),
-  bodySmall: GoogleFonts.roboto(
+  bodySmall: GoogleFonts.poppins(
     fontSize: 12,
     fontWeight: FontWeight.w400,
     letterSpacing: 0.4,
   ),
-  labelSmall: GoogleFonts.roboto(
+  labelSmall: GoogleFonts.poppins(
     fontSize: 10,
     fontWeight: FontWeight.w400,
     letterSpacing: 1.5,

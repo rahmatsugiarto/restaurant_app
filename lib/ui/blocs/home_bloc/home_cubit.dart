@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restaurant_app/common/res/strings.dart';
 import 'package:restaurant_app/common/utils/view_data_state.dart';
-import 'package:restaurant_app/data/api/api_service.dart';
+import 'package:restaurant_app/data/remote/api_service.dart';
 
 import 'home_state.dart';
 

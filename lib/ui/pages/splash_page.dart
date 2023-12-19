@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:restaurant_app/common/res/assets.dart';
 import 'package:restaurant_app/common/res/strings.dart';
-
-import 'home_page.dart';
+import 'package:restaurant_app/ui/pages/main_bottom_bar_nav.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -18,7 +17,7 @@ class _SplashPageState extends State<SplashPage> {
   void initState() {
     super.initState();
     Future.delayed(durationDelayToHomePage, () {
-      Navigator.pushReplacementNamed(context, HomePage.routeName);
+      Navigator.pushReplacementNamed(context, MainBottomBarNav.routeName);
     });
   }
 

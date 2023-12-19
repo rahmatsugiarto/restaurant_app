@@ -6,6 +6,7 @@ import 'package:restaurant_app/common/utils/debouncer.dart';
 import 'package:restaurant_app/common/utils/view_data_state.dart';
 import 'package:restaurant_app/ui/blocs/search_bloc/search_cubit.dart';
 import 'package:restaurant_app/ui/blocs/search_bloc/search_state.dart';
+import 'package:restaurant_app/ui/pages/detail_restaurant_page.dart';
 import 'package:restaurant_app/ui/widgets/home_loading.dart';
 import 'package:restaurant_app/ui/widgets/item_restaurant.dart';
 
@@ -126,11 +127,12 @@ class _SearchPageState extends State<SearchPage> {
                 right: 20,
                 left: 20,
               ),
-              child: const HomeLoading(),
+              child: const ListLoading(),
             );
           } else if (status.isNoData || status.isError) {
             return Center(
               child: Text(
+                key: const Key('error_message'),
                 state.searchState.message,
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
@@ -147,6 +149,12 @@ class _SearchPageState extends State<SearchPage> {
               itemBuilder: (context, index) {
                 return ItemRestaurant(
                   restaurant: resultSearch[index],
+                  onTap: () {
+                    Navigator.of(context).pushNamed(
+                      DetailRestaurantPage.routeName,
+                      arguments: resultSearch[index],
+                    );
+                  },
                 );
               },
             );
