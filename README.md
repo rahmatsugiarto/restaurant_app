@@ -1,16 +1,24 @@
-# restaurant_app
+<img src="readme_assets/preview.png">
 
-A new Flutter project.
 
-## Getting Started
+# Restaurant App - Dicoding
 
-This project is a starting point for a Flutter application.
+Application that displays Restaurant information using the Flutter framework. This repository is one of the tasks to get a certificate in [Learn Flutter Application Fundamentals](https://www.dicoding.com/certificates/6RPNV6KMQZ2M).
 
-A few resources to get you started if this is your first Flutter project:
+## Branch
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- main -> branch that completed submission - 3
+- submission - 1 -> branch that completed submission - 1
+- submission - 2 -> branch that completed submission - 2
+- submission - 3 -> branch that completed submission - 3
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## How to Run
+
+this project use [Flutter 3.13.3](https://flutter.dev/)
+
+clone this project and run this command in the project path.
+
+```bash
+flutter pub get
+flutter run
+```
